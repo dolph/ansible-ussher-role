@@ -1,0 +1,35 @@
+name: Publish to Ansible Galaxy
+
+on:
+  push:
+    branches:
+    - main
+
+env:
+  ANSIBLE_GALAXY_API_TOKEN: ${{ secrets.ANSIBLE_GALAXY_API_TOKEN }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Ansible
+      run: pip install ansible
+
+    - name: Install Ansible Galaxy Collection tools
+      run: ansible-galaxy collection install community.general
+
+    - name: Validate role
+      run: ansible-playbook ussher/tests/test.yml --inventory=ussher/tests/test.yml --syntax-check
+
+    - name: Publish role to Ansible Galaxy
+      env:
+        ANSIBLE_GALAXY_TAGS: "ssh,sshd,ussher,authorized_keys"
+      run: ansible-galaxy role publish --token "${ANSIBLE_GALAXY_API_TOKEN}" --force

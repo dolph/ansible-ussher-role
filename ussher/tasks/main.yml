@@ -1,0 +1,65 @@
+---
+- name: Install required packages
+  become: true
+  ansible.builtin.package:
+    name: build-essential
+    state: present
+
+- name: Download ussher binary
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ ussher_binary_url }}"
+    dest: "{{ ussher_binary_path }}"
+    mode: 0750
+
+- name: Create ussher user
+  become: true
+  ansible.builtin.user:
+    name: "{{ ussher_user }}"
+    shell: "/usr/sbin/nologin"
+    system: yes
+    group: "{{ ussher_user }}"
+
+- name: Create ussher config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ ussher_config_dir }}"
+    state: directory
+
+- name: Create ussher cache directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ ussher_cache_dir }}"
+    state: directory
+    mode: 0700
+    owner: "{{ ussher_user }}"
+    group: "{{ ussher_user }}"
+
+- name: Create ussher log directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ ussher_log_dir }}"
+    state: directory
+    mode: 0700
+    owner: "{{ ussher_user }}"
+    group: "{{ ussher_user }}"
+
+- name: Update sshd configuration
+  become: true
+  ansible.builtin.lineinfile:
+    path: "/etc/ssh/sshd_config"
+    regexp: "^#?AuthorizedKeysCommand .*"
+    line: "AuthorizedKeysCommand {{ ussher_binary_path }}"
+  notify: Restart sshd
+
+- name: Update sshd configuration
+  become: true
+  ansible.builtin.lineinfile:
+    path: "/etc/ssh/sshd_config"
+    regexp: "^#?AuthorizedKeysCommandUser .*"
+    line: "AuthorizedKeysCommandUser {{ ussher_user }}"
+  notify: Restart sshd
+
+- name: Validate sshd configuration
+  become: true
+  ansible.builtin.command: "sshd -t"

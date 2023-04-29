@@ -1,0 +1,7 @@
+---
+ussher_binary_url: "https://github.com/dolph/ussher/releases/latest/download/ussher"
+ussher_binary_path: "/usr/local/bin/ussher"
+ussher_user: "ussher"
+ussher_config_dir: "/etc/ussher"
+ussher_cache_dir: "/var/cache/ussher"
+ussher_log_dir: "/var/log/ussher"

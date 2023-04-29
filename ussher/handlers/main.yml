@@ -1,0 +1,6 @@
+---
+- name: Restart sshd
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+  when: download_result.changed or sshd_result.changed
