@@ -27,7 +27,7 @@ jobs:
       run: ansible-galaxy collection install community.general
 
     - name: Validate role
-      run: ansible-playbook ussher/tests/test.yml --inventory=ussher/tests/test.yml --syntax-check
+      run: ansible-playbook tests/test.yml --inventory=tests/test.yml --syntax-check
 
     - name: Publish role to Ansible Galaxy
       env:
