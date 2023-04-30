@@ -1,10 +1,4 @@
 ---
-- name: Install required packages
-  become: true
-  ansible.builtin.package:
-    name: build-essential
-    state: present
-
 - name: Download ussher binary
   become: true
   ansible.builtin.get_url:
