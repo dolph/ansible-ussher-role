@@ -63,3 +63,4 @@
 - name: Validate sshd configuration
   become: true
   ansible.builtin.command: "sshd -t"
+  changed_when: false
