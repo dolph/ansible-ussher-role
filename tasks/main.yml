@@ -6,13 +6,19 @@
     dest: "{{ ussher_binary_path }}"
     mode: 0750
 
+- name: Create ussher group
+  become: true
+  ansible.builtin.group:
+    name: "{{ ussher_user }}"
+    system: true
+
 - name: Create ussher user
   become: true
   ansible.builtin.user:
     name: "{{ ussher_user }}"
     shell: "/usr/sbin/nologin"
-    system: yes
     group: "{{ ussher_user }}"
+    system: true
 
 - name: Create ussher config directory
   become: true
