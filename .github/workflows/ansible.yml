@@ -26,8 +26,11 @@ jobs:
     - name: Install Ansible Galaxy Collection tools
       run: ansible-galaxy collection install community.general
 
+    - name: Configuration for tests
+      run: echo -e "[defaults]\nroles_path = .." > ansible.cfg
+
     - name: Validate role
-      run: ansible-playbook tests/test.yml --inventory=tests/test.yml --syntax-check
+      run: ansible-playbook tests/test.yml --inventory=tests/inventory --syntax-check
 
     - name: Publish role to Ansible Galaxy
       env:
