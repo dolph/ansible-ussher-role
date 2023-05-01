@@ -64,3 +64,42 @@
   become: true
   ansible.builtin.command: "sshd -t"
   changed_when: false
+
+- name: Push selinux type enforcement file
+  ansible.builtin.copy:
+    src: ussher.te
+    dest: /tmp/ussher.te
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Push policy module
+  become: true
+  copy:
+
+- name: Compile policy module
+  become: true
+  ansible.builtin.command:
+    cmd: checkmodule -M -m -o /tmp/ussher.mod /tmp/ussher.te
+
+- name: Create an installable policy file from the policy module
+  become: true
+  ansible.builtin.command:
+    cmd: semodule_package -o /tmp/ussher.pp -m /tmp/ussher.mod
+
+- name: Install ussher's policy file
+  become: true
+  ansible.builtin.command:
+    cmd: semodule_package -o /tmp/ussher.pp -m /tmp/ussher.mod
+
+- name: Check if ussher module is already installed
+  ansible.builtin.shell: semodule -l | grep -w ussher
+  register: ussher_module_installed
+  failed_when: false
+  changed_when: false
+  become: true
+
+- name: Install ussher.pp SELinux policy package
+  ansible.builtin.shell: semodule -i /tmp/ussher.pp
+  when: ussher_module_installed.rc != 0
+  become: true
