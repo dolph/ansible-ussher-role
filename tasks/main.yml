@@ -73,10 +73,6 @@
     group: root
     mode: 0644
 
-- name: Push policy module
-  become: true
-  copy:
-
 - name: Compile policy module
   become: true
   ansible.builtin.command:
@@ -93,13 +89,13 @@
     cmd: semodule_package -o /tmp/ussher.pp -m /tmp/ussher.mod
 
 - name: Check if ussher module is already installed
+  become: true
   ansible.builtin.shell: semodule -l | grep -w ussher
   register: ussher_module_installed
   failed_when: false
   changed_when: false
-  become: true
 
 - name: Install ussher.pp SELinux policy package
-  ansible.builtin.shell: semodule -i /tmp/ussher.pp
-  when: ussher_module_installed.rc != 0
   become: true
+  ansible.builtin.command: semodule -i /tmp/ussher.pp
+  when: ussher_module_installed.rc != 0
