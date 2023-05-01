@@ -1,9 +1,7 @@
 module ussher 1.0;
 
 require {
-    class file { getattr open };
     class file { getattr open read write };
-    class file open;
     class tcp_socket name_connect;
     type http_port_t;
     type sshd_t;
