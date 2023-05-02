@@ -34,6 +34,7 @@
     mode: 0700
     owner: "{{ ussher_user }}"
     group: "{{ ussher_user }}"
+    setype: sshd_t
 
 - name: Create ussher log directory
   become: true
@@ -43,6 +44,7 @@
     mode: 0700
     owner: "{{ ussher_user }}"
     group: "{{ ussher_user }}"
+    setype: sshd_t
 
 - name: Update sshd configuration
   become: true
