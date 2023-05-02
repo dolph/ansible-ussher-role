@@ -17,11 +17,6 @@
   ansible.builtin.command:
     cmd: semodule_package -o /tmp/ussher.pp -m /tmp/ussher.mod
 
-- name: Install ussher's policy file
-  become: true
-  ansible.builtin.command:
-    cmd: semodule_package -o /tmp/ussher.pp -m /tmp/ussher.mod
-
 - name: Check if ussher module is already installed
   become: true
   ansible.builtin.shell: semodule -l | grep -w ussher
