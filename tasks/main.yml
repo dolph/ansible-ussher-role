@@ -23,6 +23,8 @@
     state: directory
 
 - name: Create ussher cache directory
+  become: true
+  become_user: root
   ansible.builtin.file:
     path: "{{ ussher_cache_dir }}"
     state: directory
